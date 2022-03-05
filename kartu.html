@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nomor Antrian Untuk Vaksin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    
+</head>
+<body>
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+        <!-- Brand -->
+        <a class="navbar-brand" href="#">VAKSIN</a>
+      
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Index</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="pendaftaran.html">Pendaftaran</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="lokasi.html">Lokasi</a>
+            </li>
+            <li class="vav-item">
+              <a class="nav-link" href="kartu.html">Kartu</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+    <div id="app">
+
+        <div class="container">
+            <div class="py-5 text-center">
+              <h2>PEMESANAN NOMOR ANTRIAN UNTUK VAKSIN</h2>
+              <p class="lead"></p>
+            </div>
+      
+              <div class="col-md-12">
+                <h4 class="mb-3"><button class="btn btn-md btn-primary" v-on:click="resetForm()">Add Data</button>
+                </h4>
+                <table class="table table-secondary table-hover">
+                    <tr>
+                        <th>ID</th>
+                        <th>id_pendaftaran</th>
+                        <th>id_lokasi</th>
+                        <th>no_kartu</th>
+                        <th>cetak_kartu</th>
+                        <th>reset</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                    <tr v-for="kartu in kartus">
+                        <td>{{ kartu.id }}</td>
+                        <td>{{ kartu.id_pendaftaran }}</td>
+                        <td>{{ kartu.id_lokasi }}</td>
+                        <td>{{ kartu.no_kartu }}</td>
+                        <td>{{ kartu.cetak_kartu }}</td>
+                        <td>{{ kartu.reset}} </td>
+                        <td><button class="btn btn-md btn-warning" v-on:click="getEdit(kartu)">Edit</button></td>
+                        <td><button class="btn btn-danger" v-on:click="getDelete(kartu)">Delete</button></td>
+                    </li>
+                </table>
+
+                <div v-if="message" class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+                
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="id_pendaftaran">id_Pendaftaran</label>
+                      <input v-model="id_pendaftaran" type="text" class="form-control" id="id_pendaftaran" placeholder="" value="" required>
+                      <div class="invalid-feedback">
+                        Valid last name is required.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="id_lokasi">id_lokasi</label>
+                      <input v-model="id_lokasi" type="text" class="form-control" id="id_lokasi" placeholder="" value="" required>
+                      <div class="invalid-feedback">
+                        Valid last name is required.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="no_kartu">no_kartu</label>
+                      <input v-model="no_kartu" type="text" class="form-control" id="no_kartu" placeholder="" value="" required>
+                      <div class="invalid-feedback">
+                        Valid last name is required.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="cetak_kartu">Cetak_Kartu</label>
+                      <input v-model="cetak_kartu" type="text" class="form-control" id="cetak_kartu" placeholder="" value="" required>
+                      <div class="invalid-feedback">
+                        Valid last name is required.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="reset">reset</label>
+                      <input v-model="reset" type="text" class="form-control" id="reset" placeholder="" value="" required>
+                      <div class="invalid-feedback">
+                        Valid last name is required.
+                      </div>
+                    </div>
+                  </div>
+                
+                  <hr class="mb-4">
+                  <button v-if="!editMode && !deleteMode" v-on:click="createKartu" class="btn btn-primary btn-lg btn-block" type="submit">Submit Data</button>
+                  <button v-if="editMode" v-on:click="updateKartu" class="btn btn-warning btn-lg btn-block" type="submit">Update Data</button>
+                  <button v-if="deleteMode" v-on:click="deleteKartu" class="btn btn-danger btn-lg btn-block" type="submit">Delete Data</button>
+                  
+              </div>
+            </div>
+
+            <footer class="my-5 pt-5 text-muted text-center text-small">
+                <p class="mb-1">&copy; 2022 FTI UNAI RISMAULI MARPAUNG</p>
+                <ul class="list-inline">
+                  <li class="list-inline-item"><a href="#">Badan Teknis WHO</a></li>
+                  <li class="list-inline-item"><a href="#">Kementrian Kesehatan</a></li>
+                  <li class="list-inline-item"><a href="#">AYO VAKSIN</a></li>
+                </ul>
+            </footer>
+    </div>
+    
+
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+        var app = new Vue ({
+            el: '#app',
+            data: {
+                errors: [],
+                message: null,
+                kartus:[],
+                kartuIdEdit: null,
+                kartuIdDelete: null,
+                editMode: false,
+                deleteMode: false,
+                id_pendaftaran: '',
+                id_lokasi: '',
+                no_kartu: '',
+                cetak_kartu: '',
+                reset: '',
+            },
+            mounted: function() {
+                this.getKartu();
+            },
+            methods: {
+                getKartu() {
+                    axios.get('https://621af9affaa12ee450028a9f.mockapi.io/kartu')
+                        .then(response => {
+                            this.kartus = response.data;
+                            console.log(response);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                },
+                createKartu: function(){
+                    axios.post('https://621af9affaa12ee450028a9f.mockapi.io/kartu', {
+                        id_pendaftaran: this.id_pendaftaran,
+                        id_lokasi: this.id_lokasi,
+                        no_kartu: this.no_kartu,
+                        cetak_kartu: this.cetak_kartu,
+                        reset: this.reset,
+                    })
+                    .then(response => {
+                            this.getKartu();
+                            this.message = "Your data has been submitted";
+                            console.log(response);
+                    })
+                    .catch(error => {
+                            console.log(error);
+                    });
+                },
+                resetForm: function () {
+                    this.message = null;
+                    this.editMode = false;
+                    this.deleteMode = false;
+                    this.kartuIdEdit = null;
+                    this.id_pendaftaran = null;
+                    this.id_lokasi = null;
+                    this.no_kartu = null;
+                    this.cetak_kartu = null;
+                    this.reset = null;
+                },
+                getEdit: function (kartu) {
+                    this.message = null;
+                    this.editMode = true;
+                    this.deleteMode = false;
+                    this.kartuIdEdit = kartu.id;
+                    this.id_pendaftaran = kartu.id_pendaftaran;
+                    this.id_lokasi = kartu.id_lokasi;
+                    this.no_kartu = kartu.no_kartu;
+                    this.cetak_kartu = kartu.cetak_kartu;
+                    this.reset = kartu.reset;
+                },
+                getDelete: function (kartu) {
+                    this.message = null;
+                    this.deleteMode = true;
+                    this.editMode = false;
+                    this.kartuIdDelete = kartu.id;
+                    this.id_pendaftaran = kartu.id_pendaftaran;
+                    this.id_lokasi = kartu.id_lokasi;
+                    this.no_kartu = kartu.no_kartu;
+                    this.cetak_kartu = kartu.cetak_kartu;
+                    this.reset = kartu.reset;
+                },
+                updateKartu: function () {
+                    axios.put(`https://621af9affaa12ee450028a9f.mockapi.io/kartu/${this.kartuIdEdit}`, {
+                        id_pendaftaran: this.id_pendaftaran,
+                        id_lokasi: this.id_lokasi,
+                        no_kartu: this.no_kartu,
+                        cetak_kartu: this.cetak_kartu,
+                        reset: this.reset,
+                        })
+                        .then(res => {
+                            // handle success
+                            this.message = "Your data has been updated";
+                            this.getKartu();
+                        })
+                        .catch(err => {
+                            // handle error
+                            console.log(err);
+                        })
+                },
+                // Delete User
+                deleteKartu: function () {
+                    axios.delete(`https://621af9affaa12ee450028a9f.mockapi.io/kartu/${this.kartuIdDelete}`)
+                        .then(res => {
+                            // handle success
+                            this.message = "Your data has been deleted";
+                            this.getKartu();
+                        })
+                        .catch(err => {
+                            // handle error
+                            console.log(err);
+                        })
+                }
+            }
+        })
+        
+    </script>
+</body>
+</html>
